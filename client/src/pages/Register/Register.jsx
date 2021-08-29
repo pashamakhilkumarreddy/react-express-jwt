@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, Redirect } from "react-router-dom";
-import { isValidEmail, isValidPassword } from "../../utils/constants";
+import { isValidEmail, isValidPassword } from "../../utils/helpers";
 import { startUserSession } from "../../utils/helpers";
 import AuthenticationService from "../../services/AuthenticationService";
 import FormLayout from "../../components/FormLayout";

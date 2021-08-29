@@ -3,7 +3,7 @@ import Routes from './routes';
 import AppHeader from './components/common/Header';
 import AppFooter from './components/common/Footer';
 
-function App() {
+const App = () => {
   return (
     <>
       <AppHeader />

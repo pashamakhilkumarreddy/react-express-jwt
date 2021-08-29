@@ -1,14 +1,15 @@
 /* eslint-disable import/no-anonymous-default-export */
-import Api from './Api';
+import Api from "./Api";
+import { USERS } from "../utils/constants";
 
 export default {
   getUsers() {
-    return Api().get('users');
+    return Api().get(USERS);
   },
   getUser(userId) {
-    return Api().get(`users/${userId}`);
+    return Api().get(`${USERS}/${userId}`);
   },
   post(user) {
-    return Api().post('users', user);
-  }
-}
+    return Api().post(USERS, user);
+  },
+};

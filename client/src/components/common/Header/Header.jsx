@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-import { destroyUserSession, getUserName } from "../../../utils/helpers";
+import { destroyUserSession, getUserName } from "../../../utils/helpers/validations";
 import "./header.scss";
 
 const Header = () => {
