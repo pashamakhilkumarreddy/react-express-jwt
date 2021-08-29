@@ -7,16 +7,11 @@ const {
   jwtSignUser,
 } = require('../utils/helpers');
 
-const {
-  ONE_WEEK,
-} = require('../utils/constants');
+const { ONE_WEEK } = require('../utils/constants');
 
 module.exports = {
   login(req, res) {
-    const {
-      email,
-      password,
-    } = req.body;
+    const { email, password } = req.body;
     try {
       if (email && password) {
         const users = getAllUsers();
@@ -33,7 +28,10 @@ module.exports = {
               phone: user.phone,
               website: user.website,
             };
-            const token = jwtSignUser(JSON.parse(JSON.stringify(userTokenProperties)), ONE_WEEK);
+            const token = jwtSignUser(
+              JSON.parse(JSON.stringify(userTokenProperties)),
+              ONE_WEEK,
+            );
             return res.status(200).send({
               err: false,
               token,
@@ -52,7 +50,7 @@ module.exports = {
         message: 'Invalid Credentials',
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return res.status(500).send({
         err: true,
         message: 'Interval Server Error',
@@ -61,16 +59,19 @@ module.exports = {
   },
   register(req, res) {
     try {
-      const {
-        email,
-        password,
-      } = req.body;
+      const { email, password } = req.body;
       if (email && password) {
-        const id = (Math.random().toString(18).slice(2) + new Date().getTime()
-        + genSalt(8)).slice(0, 15);
+        const id = (
+          Math.random().toString(18).slice(2)
+          + new Date().getTime()
+          + genSalt(8)
+        ).slice(0, 15);
         const salt = genSalt(64);
-        const username = (Math.random().toString(36).slice(2) + new Date().getTime()
-        + genSalt(32)).slice(0, 25);
+        const username = (
+          Math.random().toString(36).slice(2)
+          + new Date().getTime()
+          + genSalt(32)
+        ).slice(0, 25);
         const hashedPass = genHashedPass(password, salt);
         const user = {
           id,
@@ -92,7 +93,10 @@ module.exports = {
             phone: user.phone,
             website: user.website,
           };
-          const token = jwtSignUser(JSON.parse(JSON.stringify(userTokenProperties)), ONE_WEEK);
+          const token = jwtSignUser(
+            JSON.parse(JSON.stringify(userTokenProperties)),
+            ONE_WEEK,
+          );
           res.status(200).send({
             err: false,
             token,
@@ -102,12 +106,13 @@ module.exports = {
         } else {
           res.status(403).send({
             err: true,
-            message: 'A user already exists with the given details. Please try logging in!',
+            message:
+              'A user already exists with the given details. Please try logging in!',
           });
         }
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).send({
         err: true,
         message: 'Interval Server Error',

@@ -1,6 +1,4 @@
-const {
-  getAllUsers,
-} = require('../utils/helpers');
+const { getAllUsers } = require('../utils/helpers');
 
 module.exports = {
   getUsers(req, res) {
@@ -44,7 +42,7 @@ module.exports = {
         message: 'No user found',
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   },
 };

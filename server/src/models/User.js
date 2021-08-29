@@ -4,92 +4,93 @@ const jwt = require('jsonwebtoken');
 
 const config = require('../config');
 
-const {
-  Schema,
-} = mongoose;
+const { Schema } = mongoose;
 
-const UserSchema = new Schema({
-  username: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    validate: {
-      validator(val) {
-        return /a/.test(val);
+const UserSchema = new Schema(
+  {
+    username: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      validate: {
+        validator(val) {
+          return /a/.test(val);
+        },
+        message: (props) => `${props.value} is not a valid username`,
       },
-      message: (props) => `${props.value} is not a valid username`,
+      required: [true, 'Username is required'],
+      unique: true,
+      index: true,
+      minlength: 12,
+      maxlength: 36,
     },
-    required: [true, 'Username is required'],
-    unique: true,
-    index: true,
-    minlength: 12,
-    maxlength: 36,
-  },
-  name: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    minlength: 1,
-    maxlength: 36,
-  },
-  email: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    validate: {
-      validator(val) {
-        return /asas/.test(val);
+    name: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      minlength: 1,
+      maxlength: 36,
+    },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      validate: {
+        validator(val) {
+          return /asas/.test(val);
+        },
+        message: (props) => `${props.value} is not a valid email`,
       },
-      message: (props) => `${props.value} is not a valid email`,
+      required: [true, 'Email is required'],
+      unique: true,
+      index: true,
+      minlength: 6,
+      maxlength: 60,
     },
-    required: [true, 'Email is required'],
-    unique: true,
-    index: true,
-    minlength: 6,
-    maxlength: 60,
-  },
-  password: {
-    type: String,
-    trim: true,
-    lowercase: true,
-    required: [true, 'Password is required'],
-    minlength: 8,
-    maxlength: 36,
-  },
-  phone: {
-    type: String,
-    trim: true,
-    validate: {
-      validator(val) {
-        return /asdfsda/.text(val);
+    password: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      required: [true, 'Password is required'],
+      minlength: 8,
+      maxlength: 36,
+    },
+    phone: {
+      type: String,
+      trim: true,
+      validate: {
+        validator(val) {
+          return /asdfsda/.text(val);
+        },
+        message: (props) => `${props.value} is not a valid phone number`,
       },
-      message: (props) => `${props.value} is not a valid phone number`,
+      minlength: 10,
+      maxlength: 12,
+      select: false,
     },
-    minlength: 10,
-    maxlength: 12,
-    select: false,
+    dob: {
+      type: Date,
+      select: false,
+    },
+    doj: {
+      type: Date,
+      default: Date.now,
+      select: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
-  dob: {
-    type: Date,
-    select: false,
+  {
+    strict: true,
+    timestamps: true,
   },
-  doj: {
-    type: Date,
-    default: Date.now,
-    select: false,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-}, {
-  strict: true,
-  timestamps: true,
-});
+);
 
 UserSchema.pre('save', async function passwordPreHook(next) {
   try {
@@ -124,7 +125,7 @@ UserSchema.methods.genRefreshToken = async function genRefreshToken() {
     tokenType: 'REFRESH',
   };
   const token = jwt.sign(data, config.jwt.JWT_SECRET, {
-    expiresIn: '24h',
+    expiresIn: config.jwt.JWT_REFRESH_TOKEN_EXPIRY,
     issuer: config.jwt.JWT_ISSUER,
   });
   return token;
@@ -138,7 +139,7 @@ UserSchema.methods.genAccessToken = async function genAccessToken() {
     isAdmin: this.isAdmin,
   };
   const token = jwt.sign(data, config.jwt.JWT_SECRET, {
-    expiresIn: '15m',
+    expiresIn: config.jwt.JWT_ACCESS_TOKEN_EXPIRY,
     issuer: config.jwt.JWT_ISSUER,
   });
   return token;
@@ -147,11 +148,7 @@ UserSchema.methods.genAccessToken = async function genAccessToken() {
 UserSchema.methods.prettifyUser = function prettifyUser() {
   const obj = this.toObject();
   const {
-    _id,
-    password,
-    isVerified,
-    __v,
-    ...rest
+    _id, password, isVerified, __v, ...rest
   } = obj;
   const userData = {
     ...rest,

@@ -2,10 +2,13 @@ require('dotenv').config();
 
 module.exports = {
   server: {
-    port: process.env.PORT || 9000,
+    PORT: process.env.PORT || 9000,
+    HOST: process.env.HOST || '127.0.0.1',
   },
   jwt: {
-    JWT_SECRET: process.env.JWT_SECRET || `MIIEpQIBAAKCAQEAyDUBBY0uiDYOxOC0ElT+bq3E45/osB74bYo1OfnB4eIsXu5i
+    JWT_SECRET:
+      process.env.JWT_SECRET
+      || `MIIEpQIBAAKCAQEAyDUBBY0uiDYOxOC0ElT+bq3E45/osB74bYo1OfnB4eIsXu5i
     BnJR7e4KAMGpd+3q/HGMxthOiNKCgybx40mWynG8lObjoikg4VCXKWYdxUncWx9c
     LByARhS1Csv7mObCbW1Y28biy8MlS+zqIRA7Xmin6D0kLhqpcNklr/GI7zyJgoix
     eahjr3T3COE+MC8Syem7tOZ5H/gMfLQ7M+h34OqO1h7TZqTyeSHmt8W2BJlw9AEb
@@ -30,8 +33,9 @@ module.exports = {
     Ke9NRSMCgYEAr3Ca7nGllMkuefVLaU+RkCFUPwTUvvHn2384eRbNm/Ao0ruMZ553
     ttPThoOp68bGY7K8YVEdXVcuVNScJM8PmN0RNNI30w/lOZTrDet0D8s6FTKx2FyJ
     0wuNGffb+0bYuoGdEtdZvzQau9YgoCLfEB6AKHqq6dMkApJMWCIXK38=`.trim(),
-    expiry: process.env.JWT_EXPIRY,
-    issuer: process.env.JWT_ISSUER || 'express-server',
+    JWT_REFRESH_TOKEN_EXPIRY: process.env.JWT_REFRESH_TOKEN_EXPIRY || '24h',
+    JWT_ACCESS_TOKEN_EXPIRY: process.env.JWT_ACCESS_TOKEN_EXPIRY || '30m',
+    JWT_ISSUER: process.env.JWT_ISSUER || 'express-server',
   },
   db: {
     DB_HOST: process.env.DB_HOST || 'localhost',

@@ -5,10 +5,7 @@ const compression = require('compression');
 const responseTime = require('response-time');
 const mongoose = require('mongoose');
 
-const {
-  server,
-  db,
-} = require('./config');
+const { server, db } = require('./config');
 
 const app = express();
 
@@ -22,16 +19,19 @@ require('./routes')({
   app,
 });
 
-const PORT = server.port;
+const { HOST, PORT } = server;
 
-mongoose.connect(`mongodb://${db.DB_HOST}:${db.DB_PORT}/${db.DB_NAME}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.info('Successfully connected to the database');
-  app.listen(PORT, () => {
-    console.info(`Server is up and running on ${PORT}`);
+mongoose
+  .connect(`mongodb://${db.DB_HOST}:${db.DB_PORT}/${db.DB_NAME}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.info('Successfully connected to the database');
+    app.listen(PORT, () => {
+      console.info(`Server is up and running on http://${HOST}:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
   });
-}).catch((err) => {
-  console.error(err);
-});
